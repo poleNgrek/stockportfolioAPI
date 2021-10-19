@@ -1,18 +1,27 @@
 import graphene
-from .types import InstrumentsType, PortfoliosType, TradesType
+from .types import PortfoliosType, TradesType
 from .models import Instruments, Portfolios, Trades
 
 class PortfolioCreateMutation(graphene.Mutation):
+    """A mutation which allows the creation of a new Portfolio"""
 
     class Arguments:
-        name = graphene.String(required=True)
-        description = graphene.String(required=True)
+        name = graphene.String(required=False)
+        description = graphene.String(required=False)
 
     portfolio = graphene.Field(PortfoliosType)
 
     @classmethod
-    def mutate(cls, root, info, name, description):
-        portfolio = Portfolios(name=name, description=description)
+    def mutate(cls, root, info, name="", description=""):
+        if name and description:
+            portfolio = Portfolios(name=name, description=description)
+        elif name:
+            portfolio = Portfolios(name=name)
+        elif description:
+            portfolio = Portfolios(description=description)
+        else:
+            portfolio = Portfolios()
+            
         portfolio.save()
         
         return PortfolioCreateMutation(portfolio=portfolio)

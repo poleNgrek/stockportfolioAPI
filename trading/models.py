@@ -2,6 +2,7 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 
 class Instruments(models.Model):
+    """The instrument class has a classmethod used to import the data from the json file"""
     class Meta:
         verbose_name_plural = 'Instruments'
         verbose_name = 'Instrument'
@@ -30,12 +31,13 @@ class Instruments(models.Model):
         return self.name
 
 class Portfolios(models.Model):
+    """A model for the Portfolios. All the fields are nullable to be able to create an empty portfolio."""
     class Meta:
         verbose_name_plural = 'Portfolios'
         verbose_name = 'Portfolio'
 
-    name = models.CharField(max_length=50)
-    description = models.TextField()
+    name = models.CharField(max_length=50, null=True)
+    description = models.TextField(null=True)
     holding_value = models.FloatField(null=True)
     total_profit_loss = models.FloatField(null=True)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -45,6 +47,7 @@ class Portfolios(models.Model):
         return self.name
 
 class Trades(models.Model):
+    """The trades model has two foreign keys to the other two models."""
     class Meta:
         verbose_name_plural = 'Trades'
         verbose_name = 'Trade'
