@@ -8,10 +8,10 @@ class Instruments(models.Model):
 
     name = models.CharField(max_length=50)
     symbol = models.CharField(max_length=10)
-    date = models.DateField()
-    isEnabled = models.BooleanField()
-    type = models.CharField(max_length= 20)
-    iexId = models.IntegerField()
+    date = models.DateField(auto_now_add=True)
+    isEnabled = models.BooleanField(default=False)
+    type = models.CharField(max_length= 20, null=True)
+    iexId = models.IntegerField(null=True)
 
     @classmethod
     def create(cls, **kwargs):
@@ -52,12 +52,12 @@ class Trades(models.Model):
     portfolio = models.ForeignKey(Portfolios, to_field='id', on_delete=models.CASCADE)
     instrument = models.ForeignKey(Instruments, to_field='id', on_delete=models.CASCADE)
     volume = models.PositiveIntegerField()
-    buy_value = models.PositiveIntegerField()
+    buy_value = models.PositiveIntegerField(null=True)
     sell_value = models.PositiveIntegerField(null=True)
     profit_loss = models.IntegerField(null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     last_modified = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return '%s, %s' % ( self.portfolio.name, self.instrument.name)
+        return '%s, %s' % ( self.instrument.name, self.portfolio.name)
 
