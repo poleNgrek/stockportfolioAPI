@@ -34,7 +34,7 @@ so if you want, you can create an admin user account and access them at *http://
   7. A search function for instruments that filters based on id,name or symbol
 
 
-### Instructions ⏳
+### Instructions :scroll:
 
 - **install docker and docker-compose**.
 - **Clone the project**.
