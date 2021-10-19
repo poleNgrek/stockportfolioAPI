@@ -1,19 +1,20 @@
 import graphene
+from graphql import GraphQLError
 from django.db.models import Q
 from .types import InstrumentsType, PortfoliosType, TradesType
 from .models import Instruments, Portfolios, Trades
 from .mutations import PortfolioCreateMutation, PortfolioUpdateMutation, TradeCreateMutation, TradeUpdateMutation
 
 class Query(graphene.ObjectType):
-    instruments = graphene.List(InstrumentsType, search=graphene.String())
-
     all_portfolios = graphene.List(PortfoliosType)
     all_instruments = graphene.List(InstrumentsType)
     all_trades = graphene.List(TradesType)
 
-    one_instrument = graphene.Field(InstrumentsType, id=graphene.Int(), symbol=graphene.String())
+    search_instruments = graphene.List(InstrumentsType, search=graphene.String())
+    instrument = graphene.Field(InstrumentsType, id=graphene.String(), symbol=graphene.String())
+    portfolio = graphene.Field(PortfoliosType, id=graphene.String(), name=graphene.String())
 
-    def resolve_instruments(root, info, search=None):
+    def resolve_search_instruments(root, info, search=None):
         if search:
             filter = (
                 Q(id__icontains=search) |
@@ -31,8 +32,26 @@ class Query(graphene.ObjectType):
     def resolve_all_trades(root, info):
         return Trades.objects.all()
 
-    def resolve_one_instrument(root, info, id, **kwargs):
-        return Instruments.objects.get(pk=id, symbol=kwargs.symbol)
+    def resolve_instrument(root, info, id, symbol):
+        if id:
+            return Instruments.objects.get(pk=id)
+        elif symbol:
+            return Instruments.objects.get(symbol=symbol)
+        elif id and symbol:
+            return Instruments.objects.get(pk=id, symbol=symbol)
+        else:
+            raise GraphQLError("You must provide id or symbol")
+
+    def resolve_portfolio(root, info, id, name):
+        if id:
+            return Instruments.objects.get(pk=id)
+        elif name:
+            return Instruments.objects.get(name=name)
+        elif id and name:
+            return Instruments.objects.get(pk=id, name=name)
+        else:
+            raise GraphQLError("You must provide id or name")
+
 
 
 class Mutation(graphene.ObjectType):
