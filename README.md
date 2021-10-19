@@ -40,7 +40,7 @@ so if you want, you can create an admin user account and access them at *http://
 - **Clone the project**.
 - **Navigate to the root file**. 
 - **Open a command line and type `docker-compose up`**. 
-- **Navigate to** _(http://localhost:8000/graphql)_
+- **Navigate to** _http://localhost:8000/graphql_
 
 #### Testing ⚙️
 - The testing is somewhat limited and incomplete at the moment. However there are some basic testing files for models, for a resolve and for  testing the database connection. You can run the tests by opening another shell and typing, for example, `docker-compose run web python manage.py test trading.tests.commands` or if you want to test the models just replace the word commands with models.
